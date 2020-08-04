@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from './modal/modal.component';
+import { RestService } from '../services/rest.service';
+//Interfaces
+import { Departamento, Departamentos } from '../interfaces/interface';
 
 @Component({
   selector: 'app-components',
@@ -9,20 +10,41 @@ import { ModalComponent } from './modal/modal.component';
 })
 export class ComponentsComponent implements OnInit {
 
-  constructor( private dialog: MatDialog ) { }
+  //Almacenar data recibida de Departamentos y Municipios
+  id: string = 'No hay ningun ID seleccionado.';
+  departamentos: Departamento[] = [];
+  municipios: Departamentos[] = [];
+
+  constructor( private restSvc: RestService ) { }
 
   ngOnInit(): void {
+    this.ObtenerDepartamentos();
   }
 
-  //Mostrar el modal en pantalla
-  abrirModal ( ) {
-    //Carga del componente en el modal
-    const dialogRef = this.dialog.open( ModalComponent );
+  //Obtener Departamentos
+  ObtenerDepartamentos () {
+    this.restSvc.obtenerDepartamentos()
+      .subscribe( resp => {
+        //Spread para manipular la data recibida
+        const departamentos = [...resp];
+        //Manipulando la data para adaptarla al selector de Angular Material
+        for ( let departamento of departamentos ) {
+          this.departamentos.push( { value: departamento.localizacionId, viewValue: departamento.descripcion } )
+        };
 
-    dialogRef.afterClosed().subscribe(result => {
-      //Subscribe por RxJS Para obtener los datos solicitados
-    });
+      } );
+  };
+  //Obtener Municipios
+  obtenerMunicipios ( id: string ) {
+    //Validacion para que no realice una peticion vacia
+    if ( id.length > 0 ) {
+      //Recibiendo Data del servicio
+      this.restSvc.obtenerMunicipios(id)
+      .subscribe( resp => {
+        this.municipios = resp;
+      } );
 
-  }
+    };
+  };
 
 }

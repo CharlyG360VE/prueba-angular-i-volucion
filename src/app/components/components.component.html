@@ -5,18 +5,32 @@
     <h3><i class="fab fa-angular"></i> <small class="ml-3"> Prueba Angular</small> </h3>
   </div>
 </mat-toolbar>
-
+<!-- Selector de Departamentos -->
 <div class="container mt-5 text-center animated fadeIn">
-  <!-- Boton de Angular Material para abrir el modal -->
-  <h4>Presiona el boton para mostrar la vista previa.</h4>
-  <button mat-stroked-button color="primary" (click)="abrirModal()">Vista previa</button>
-</div>
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Departamentos</mat-label>
+    <mat-select [(ngModel)]="id" name="id">
+      <mat-option *ngFor="let departamento of departamentos" [value]="departamento.value" (click)="obtenerMunicipios( id )">
+        {{departamento.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- Verificando que el id es seleccionado correctamente -->
+  <p>ID seleccionado: {{id}}</p>
 
-<div class="container mt-5 animated fadeIn">
-  <p>
-    <i class="fas fa-long-arrow-alt-right"></i> Este componente se encuentra configurado en "Angular 10" y "Angular Material"
-    Utilizo los iconos de la libreria "Font Awesome" y el componente en su totalidad esta cargado mediante "Lazy Load", el "Modal" 
-    o "Vista Previa" no es necesario asignarle una ruta ya que el "Componente" es cargado mediante el "Modal" y para 
-    ordenar el html utilizo "Bootstrap" de resto todo es configurado en Angular Material.
-  </p>
+</div>
+<!-- Despliegue de listas Municipios -->
+<div class="container">
+
+  <mat-list role="list" *ngFor="let municipio of municipios">
+  
+    <mat-list-item role="listitem">
+      <div class="container" align="center">
+        {{ municipio.descripcion }} 
+      </div> 
+    </mat-list-item>
+  
+  </mat-list>
+
 </div>
